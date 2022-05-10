@@ -5,6 +5,11 @@ VisualStudioVersion = 16.0.32413.511
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dxmedia", "dxmedia\dxmedia.vcxproj", "{2AC681A8-C482-440C-8E3D-DA902EB5320F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dxmedia_test", "dxmedia_test\dxmedia_test.vcxproj", "{B8528F31-0111-4D0F-AB66-DC0037FCF593}"
+	ProjectSection(ProjectDependencies) = postProject
+		{2AC681A8-C482-440C-8E3D-DA902EB5320F} = {2AC681A8-C482-440C-8E3D-DA902EB5320F}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -15,6 +20,10 @@ Global
 		{2AC681A8-C482-440C-8E3D-DA902EB5320F}.Debug|x64.Build.0 = Debug|x64
 		{2AC681A8-C482-440C-8E3D-DA902EB5320F}.Release|x64.ActiveCfg = Release|x64
 		{2AC681A8-C482-440C-8E3D-DA902EB5320F}.Release|x64.Build.0 = Release|x64
+		{B8528F31-0111-4D0F-AB66-DC0037FCF593}.Debug|x64.ActiveCfg = Debug|x64
+		{B8528F31-0111-4D0F-AB66-DC0037FCF593}.Debug|x64.Build.0 = Debug|x64
+		{B8528F31-0111-4D0F-AB66-DC0037FCF593}.Release|x64.ActiveCfg = Release|x64
+		{B8528F31-0111-4D0F-AB66-DC0037FCF593}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

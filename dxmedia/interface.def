@@ -1,0 +1,3 @@
+﻿LIBRARY "dxmedia"
+EXPORTS
+	create_dxmedia_reader
