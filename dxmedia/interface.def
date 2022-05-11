@@ -1,5 +1,3 @@
 ﻿LIBRARY "dxmedia"
 EXPORTS
-	create_dxmedia_reader
-	startup_mediafoundation
-	shutdown_mediafoundation
+	create_dxmedia_factory

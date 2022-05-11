@@ -88,15 +88,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="dxmedia_factory.h" />
     <ClInclude Include="dxmedia_reader.h" />
     <ClInclude Include="dxmedia_struct.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="interface.h" />
+    <ClInclude Include="i_dxmedia_factory.h" />
     <ClInclude Include="i_dxmedia_reader.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
+    <ClCompile Include="dxmedia_factory.cpp" />
     <ClCompile Include="dxmedia_reader.cpp" />
     <ClCompile Include="interface.cpp" />
     <ClCompile Include="pch.cpp">

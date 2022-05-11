@@ -1,20 +1,9 @@
 #include "pch.h"
-#include "dxmedia_reader.h"
-
-void __stdcall create_dxmedia_reader(i_dxmedia_reader** pReader)
+#include "dxmedia_factory.h"
+void __stdcall create_dxmedia_factory(i_dxmedia_factory** pFactory)
 {
-	if (pReader)
+	if (pFactory)
 	{
-		*pReader = new dxmedia_reader;
+		*pFactory = new dxmedia_factory;
 	}
-}
-
-void __stdcall startup_mediafoundation()
-{
-	MFStartup(MF_VERSION);
-}
-
-void __stdcall shutdown_mediafoundation()
-{
-	MFShutdown();
 }

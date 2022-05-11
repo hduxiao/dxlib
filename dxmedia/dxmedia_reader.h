@@ -1,7 +1,7 @@
 #pragma once
-#include "interface.h"
+#include "i_dxmedia_reader.h"
+#include "dxmedia_struct.h"
 #include <vector>
-
 class dxmedia_reader :
     public i_dxmedia_reader
 {
@@ -17,4 +17,3 @@ private:
     std::vector<dxstream> m_stream;
     CComPtr<IMFSourceReader> m_pReader;
 };
-

@@ -33,6 +33,12 @@
     <ClInclude Include="dxmedia_struct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="i_dxmedia_factory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="dxmedia_factory.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp">
@@ -45,6 +51,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="interface.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="dxmedia_factory.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

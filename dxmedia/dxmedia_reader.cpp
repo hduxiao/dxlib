@@ -1,6 +1,5 @@
 #include "pch.h"
 #include "dxmedia_reader.h"
-
 void dxmedia_reader::open_media(const wchar_t* media)
 {
 	if (media)
