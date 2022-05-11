@@ -1,14 +1,25 @@
 #include "pch.h"
 #include "dxmedia_reader.h"
 
-void __stdcall create_dxmedia_reader(i_dxmedia_reader** pReader)
+void dxmedia_reader::open_media(const wchar_t* media)
 {
-	if (pReader)
+	if (media)
 	{
-		*pReader = new dxmedia_reader;
+		m_pReader = NULL;
+
+		CComPtr<IMFAttributes> pReaderAttr;
+
+		MFCreateAttributes(&pReaderAttr, 1);
+		pReaderAttr->SetUINT32(MF_SOURCE_READER_ENABLE_ADVANCED_VIDEO_PROCESSING, TRUE);
+
+		HRESULT hr = MFCreateSourceReaderFromURL(media, pReaderAttr, &m_pReader);
+		if (SUCCEEDED(hr))
+		{
+			get_mediainfo();
+		}
 	}
 }
 
-void dxmedia_reader::read_media()
+void dxmedia_reader::get_mediainfo()
 {
 }
