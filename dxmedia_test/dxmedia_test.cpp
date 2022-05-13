@@ -28,11 +28,18 @@ int main()
 		pFactory->create_dxmedia_object(DXMEDIA_READER, &pObject);
 		pReader = reinterpret_cast<i_dxmedia_reader*>(pObject);
 		UINT32 streamNum = 0;
-		pReader->open_media(L"D:\\editing_test\\Ultra_Video_Group\\Bosphorus_1920x1080_30fps_420_8bit_AVC_MP4.mp4", streamNum);
+		pReader->open_media(L"D:\\editing_test\\american.assassin.2017.720p.bluray.x264-geckos.mkv", streamNum);
 		dxstream streamInfo;
 		pReader->get_stream_info(0, streamInfo);
-		dxframe frame;
-		pReader->get_sample(0, -1, frame);
+
+		while (true)
+		{
+			dxframe frame;
+			pReader->get_sample(1, -1, frame);
+			if (!frame.data_ptr)
+				break;
+		}
+		
 		delete pFactory;
 	}
 }

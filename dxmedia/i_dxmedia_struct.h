@@ -18,16 +18,14 @@ struct dxstream
 		none
 	};
 
-	long long   stream_index = 0;
-	type        stream_type = type::none;
+	long long   index = 0;
+	type        type = type::none;
 	// video attribute
 	long long   duration = 0;
 	long long   frame_width = 0;
 	long long   frame_height = 0;
 	long long   framerate_nume = 0;
 	long long   framerate_deno = 0;
-	long long	display_aspect_ratio_nume = 0;
-	long long	display_aspect_ratio_deno = 0;
 	// audio attribute
 	long long   channels = 0;
 	long long   sample_rate = 0;
@@ -51,6 +49,7 @@ struct dxframe
 		if (data_ptr)
 		{
 			delete[] data_ptr;
+			data_ptr = nullptr;
 		}
 	}
 

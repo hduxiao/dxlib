@@ -12,7 +12,7 @@ public:
 private:
 
     void get_mediainfo();
-    void set_mediatype(unsigned int stream_index);
+    void set_mediatype();
 
     dxmedia m_media;
     std::vector<dxstream> m_stream;
