@@ -30,7 +30,7 @@
     <ClInclude Include="i_dxmedia_reader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dxmedia_struct.h">
+    <ClInclude Include="i_dxmedia_struct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="i_dxmedia_factory.h">

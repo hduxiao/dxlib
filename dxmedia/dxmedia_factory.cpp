@@ -1,18 +1,33 @@
 #include "pch.h"
 #include "dxmedia_factory.h"
 #include "dxmedia_reader.h"
+
 dxmedia_factory::dxmedia_factory()
 {
 	MFStartup(MF_VERSION);
 }
+
 dxmedia_factory::~dxmedia_factory()
 {
 	MFShutdown();
 }
-void dxmedia_factory::create_dxmedia_reader(i_dxmedia_reader** pReader)
+
+void dxmedia_factory::create_dxmedia_object(unsigned short object, void** ppObject)
 {
-	if (pReader)
+	if (ppObject)
 	{
-		*pReader = new dxmedia_reader;
+		switch (object)
+		{
+
+		case DXMEDIA_READER:
+		{
+			*ppObject = new dxmedia_reader;
+			break;
+		}
+
+		default:
+			break;
+
+		}
 	}
 }

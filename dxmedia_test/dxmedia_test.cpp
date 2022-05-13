@@ -24,8 +24,15 @@ int main()
 
 	if (pFactory)
 	{
-		pFactory->create_dxmedia_reader(&pReader);
-		pReader->open_media(L"D:\\editing_test\\Ultra_Video_Group\\Bosphorus_1920x1080_30fps_420_8bit_AVC_MP4.mp4");
+		void* pObject = nullptr;
+		pFactory->create_dxmedia_object(DXMEDIA_READER, &pObject);
+		pReader = reinterpret_cast<i_dxmedia_reader*>(pObject);
+		UINT32 streamNum = 0;
+		pReader->open_media(L"D:\\editing_test\\Ultra_Video_Group\\Bosphorus_1920x1080_30fps_420_8bit_AVC_MP4.mp4", streamNum);
+		dxstream streamInfo;
+		pReader->get_stream_info(0, streamInfo);
+		dxframe frame;
+		pReader->get_sample(0, -1, frame);
 		delete pFactory;
 	}
 }

@@ -18,9 +18,8 @@ struct dxstream
 		none
 	};
 
-	long long   stream_id = 0;
+	long long   stream_index = 0;
 	type        stream_type = type::none;
-	bool        isSelected = false;
 	// video attribute
 	long long   duration = 0;
 	long long   frame_width = 0;
@@ -30,9 +29,30 @@ struct dxstream
 	long long	display_aspect_ratio_nume = 0;
 	long long	display_aspect_ratio_deno = 0;
 	// audio attribute
-	long long   channel_num = 0;
+	long long   channels = 0;
 	long long   sample_rate = 0;
 	long long   bits_per_sample = 0;
 	long long   block_alignment = 0;
 	long long   channel_mask = 0;
+};
+
+struct dxframe
+{
+	long long    frame_size = 0;
+	long long    frame_time = 0;
+	long long    duration = 0;
+	long long    stride = 0;
+	long long    height = 0;
+	long long    width = 0;
+	void* data_ptr = nullptr;
+
+	void release()
+	{
+		if (data_ptr)
+		{
+			delete[] data_ptr;
+		}
+	}
+
+	~dxframe() { release(); }
 };

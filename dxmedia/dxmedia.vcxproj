@@ -90,7 +90,7 @@
   <ItemGroup>
     <ClInclude Include="dxmedia_factory.h" />
     <ClInclude Include="dxmedia_reader.h" />
-    <ClInclude Include="dxmedia_struct.h" />
+    <ClInclude Include="i_dxmedia_struct.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="interface.h" />
     <ClInclude Include="i_dxmedia_factory.h" />
