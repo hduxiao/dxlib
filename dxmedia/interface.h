@@ -2,6 +2,7 @@
 #include "i_dxmedia_factory.h"
 #include "i_dxmedia_struct.h"
 #include "i_dxmedia_reader.h"
+#include "i_dxmedia_writer.h"
 
 #define DXMEDIA_READER 10000
 #define DXMEDIA_WRITER 10001
