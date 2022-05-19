@@ -3,11 +3,12 @@
 
 #include "../dxmedia/interface.h"
 #include <Windows.h>
+#include <iostream>
 
 int main()
 {
-    i_dxmedia_factory* pFactory = nullptr;
-    i_dxmedia_reader* pReader = nullptr;
+	i_dxmedia_factory* pFactory = nullptr;
+	i_dxmedia_reader* pReader = nullptr;
 
 	auto dxmedia_dll = LoadLibraryW(L"dxmedia");
 	if (dxmedia_dll)
@@ -28,18 +29,25 @@ int main()
 		pFactory->create_dxmedia_object(DXMEDIA_READER, &pObject);
 		pReader = reinterpret_cast<i_dxmedia_reader*>(pObject);
 		UINT32 streamNum = 0;
-		pReader->open_media(L"D:\\editing_test\\american.assassin.2017.720p.bluray.x264-geckos.mkv", streamNum);
+		const wchar_t* media_file
+			= L"D:\\editing_test\\8K 奥地利风光 Pictures in Motion UHD 8K_24fps.mp4";
+		pReader->open_media(media_file, streamNum);
 		dxstream streamInfo;
 		pReader->get_stream_info(0, streamInfo);
 
 		while (true)
 		{
 			dxframe frame;
-			pReader->get_sample(1, -1, frame);
+			unsigned int stream_index = 1;
+			pReader->get_sample(stream_index, -1, frame);
 			if (!frame.data_ptr)
 				break;
+			std::cout
+				<< "read sample(" << frame.frame_time << ") from stream "
+				<< stream_index
+				<< std::endl;
 		}
-		
+
 		delete pFactory;
 	}
 }
