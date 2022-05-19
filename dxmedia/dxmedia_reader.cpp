@@ -60,10 +60,10 @@ void dxmedia_reader::get_sample(unsigned int stream_index, long long frame_time,
 			CComPtr<IMFMediaBuffer> media_buffer;
 			pMFSample->ConvertToContiguousBuffer(&media_buffer);
 
-			if (dxstream::type::video == m_stream[stream_index].type)
+			CComPtr<IMF2DBuffer2> media_buffer2;
+			media_buffer->QueryInterface(IID_PPV_ARGS(&media_buffer2));
+			if (media_buffer2)
 			{
-				CComPtr<IMF2DBuffer2> media_buffer2;
-				media_buffer->QueryInterface(IID_PPV_ARGS(&media_buffer2));
 				DWORD cbBufferLength = 0;
 				BYTE* pbScanline0 = NULL;
 				LONG lPitch = 0;
@@ -75,10 +75,6 @@ void dxmedia_reader::get_sample(unsigned int stream_index, long long frame_time,
 					frame.data_ptr = new byte[cbBufferLength]();
 					memcpy(frame.data_ptr, pbBufferStart, cbBufferLength);
 					frame.frame_size = cbBufferLength;
-					frame.width = m_stream[stream_index].frame_width;
-					frame.height = m_stream[stream_index].frame_height;
-					frame.stride = frame.width * 4/*RGB32*/;
-					
 				}
 				media_buffer2->Unlock2D();
 			}
@@ -94,6 +90,11 @@ void dxmedia_reader::get_sample(unsigned int stream_index, long long frame_time,
 				frame.frame_size = cbBufferLength;
 				media_buffer->Unlock();
 			}
+
+			frame.width = m_stream[stream_index].frame_width;
+			frame.height = m_stream[stream_index].frame_height;
+			frame.stride = frame.width * 4/*RGB32*/;
+
 		}
 	}
 }
