@@ -8,5 +8,5 @@ public:
 	~dxmedia_factory();
 
 	// i_dxmedia_factory
-	void create_dxmedia_object(unsigned short object, void** ppObject) override;
+	void create_dxmedia_object(unsigned short object, i_dxmedia_object** ppObject) override;
 };

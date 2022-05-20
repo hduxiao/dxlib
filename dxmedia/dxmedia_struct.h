@@ -20,8 +20,9 @@ struct dxstream
 
 	long long   index = 0;
 	type        type = type::none;
-	// video attribute
 	long long   duration = 0;
+	long long   avg_bitrate = 0;
+	// video attribute
 	long long   frame_width = 0;
 	long long   frame_height = 0;
 	long long   framerate_nume = 0;
@@ -30,8 +31,6 @@ struct dxstream
 	long long   channels = 0;
 	long long   sample_rate = 0;
 	long long   bits_per_sample = 0;
-	long long   block_alignment = 0;
-	long long   channel_mask = 0;
 };
 
 struct dxframe

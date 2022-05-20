@@ -88,15 +88,19 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="common\BufferLock.h" />
+    <ClInclude Include="common\logging.h" />
+    <ClInclude Include="common\logmediatype.h" />
+    <ClInclude Include="common\mediatype.h" />
+    <ClInclude Include="common\mfhelper.h" />
+    <ClInclude Include="common\mfutils.h" />
+    <ClInclude Include="common\PropVar.h" />
     <ClInclude Include="dxmedia_factory.h" />
     <ClInclude Include="dxmedia_reader.h" />
     <ClInclude Include="dxmedia_writer.h" />
-    <ClInclude Include="i_dxmedia_struct.h" />
+    <ClInclude Include="dxmedia_struct.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="interface.h" />
-    <ClInclude Include="i_dxmedia_factory.h" />
-    <ClInclude Include="i_dxmedia_reader.h" />
-    <ClInclude Include="i_dxmedia_writer.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>

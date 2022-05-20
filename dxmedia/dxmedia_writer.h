@@ -6,8 +6,7 @@ class dxmedia_writer :
 public:
 
 	void create_media(const wchar_t* media) override;
-	void set_stream(const dxstream& in_stream,
-		const dxstream& out_stream, int& stream_index) override;
+	void set_stream(const dxstream& out_stream, int& stream_index) override;
 
 private:
 

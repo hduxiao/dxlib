@@ -1,7 +1,32 @@
 #include "pch.h"
 #include "dxmedia_reader.h"
 
-void dxmedia_reader::open_media(const wchar_t* media, unsigned int& stream_num)
+HRESULT EnumerateTypesForStream(IMFSourceReader* pReader, DWORD dwStreamIndex)
+{
+	HRESULT hr = S_OK;
+	DWORD dwMediaTypeIndex = 0;
+
+	while (SUCCEEDED(hr))
+	{
+		IMFMediaType* pType = NULL;
+		hr = pReader->GetNativeMediaType(dwStreamIndex, dwMediaTypeIndex, &pType);
+		if (hr == MF_E_NO_MORE_TYPES)
+		{
+			hr = S_OK;
+			break;
+		}
+		else if (SUCCEEDED(hr))
+		{
+			LogMediaType(pType);
+
+			pType->Release();
+		}
+		++dwMediaTypeIndex;
+	}
+	return hr;
+}
+
+void dxmedia_reader::open_media(const wchar_t* media, int& stream_num)
 {
 	if (media)
 	{
@@ -23,7 +48,7 @@ void dxmedia_reader::open_media(const wchar_t* media, unsigned int& stream_num)
 	}
 }
 
-void dxmedia_reader::get_stream_info(unsigned int stream_index, dxstream& stream_info)
+void dxmedia_reader::get_stream(unsigned int stream_index, dxstream& stream_info)
 {
 	if (stream_index < m_stream.size())
 	{
@@ -111,6 +136,8 @@ void dxmedia_reader::get_mediainfo()
 		if (FAILED(hr))
 			break;
 
+		EnumerateTypesForStream(m_pReader, dwStreamIndex);
+
 		// set stream index
 		dxstream stream;
 		stream.index = dwStreamIndex++;
@@ -128,6 +155,11 @@ void dxmedia_reader::get_mediainfo()
 				MF_PD_DURATION,
 				&varAttribute);
 			stream.duration = varAttribute.uhVal.QuadPart;
+
+			VideoType vt(pCurrentType);
+			UINT32 avg_bitrate = 0;
+			vt.GetAverageBitRate(&avg_bitrate);
+			stream.avg_bitrate = avg_bitrate;
 
 			// get frame size
 			UINT32 width = 0, height = 0;
@@ -149,9 +181,6 @@ void dxmedia_reader::get_mediainfo()
 			stream.channels = MFGetAttributeUINT32(pCurrentType, MF_MT_AUDIO_NUM_CHANNELS, 0);
 			stream.sample_rate = MFGetAttributeUINT32(pCurrentType, MF_MT_AUDIO_SAMPLES_PER_SECOND, 0);
 			stream.bits_per_sample = MFGetAttributeUINT32(pCurrentType, MF_MT_AUDIO_BITS_PER_SAMPLE, 16);
-			stream.channel_mask = MFGetAttributeUINT32(pCurrentType, MF_MT_AUDIO_CHANNEL_MASK, 0);
-			stream.block_alignment =
-				MFGetAttributeUINT32(pCurrentType, MF_MT_AUDIO_BLOCK_ALIGNMENT, UINT32(stream.channels * (stream.bits_per_sample / 8)));
 		}
 		else
 		{ // other stream, not process

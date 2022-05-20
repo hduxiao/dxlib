@@ -6,16 +6,4 @@
 #include <windows.h>
 #include <vector>
 
-// MediaFoundation API
-#include <mfapi.h>
-#include <mfidl.h>
-#include <mferror.h>
-#include <mfreadwrite.h>
-#include <uuids.h>
-#include <atlbase.h>
-
-// Link lib 
-#pragma comment(lib, "mf")
-#pragma comment(lib, "mfplat")
-#pragma comment(lib, "mfuuid")
-#pragma comment(lib, "mfreadwrite")
+#include "common/mfhelper.h"

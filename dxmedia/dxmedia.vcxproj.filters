@@ -13,6 +13,9 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\common">
+      <UniqueIdentifier>{afceac79-62d7-4148-af21-9bd6e1378b65}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="framework.h">
@@ -27,23 +30,35 @@
     <ClInclude Include="dxmedia_reader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="i_dxmedia_reader.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="i_dxmedia_struct.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="i_dxmedia_factory.h">
+    <ClInclude Include="dxmedia_struct.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="dxmedia_factory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="i_dxmedia_writer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="dxmedia_writer.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="common\mfhelper.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\logging.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\logmediatype.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\mediatype.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\mfutils.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\BufferLock.h">
+      <Filter>Header Files\common</Filter>
+    </ClInclude>
+    <ClInclude Include="common\PropVar.h">
+      <Filter>Header Files\common</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -13,7 +13,7 @@ dxmedia_factory::~dxmedia_factory()
 	MFShutdown();
 }
 
-void dxmedia_factory::create_dxmedia_object(unsigned short object, void** ppObject)
+void dxmedia_factory::create_dxmedia_object(unsigned short object, i_dxmedia_object** ppObject)
 {
 	if (ppObject)
 	{
