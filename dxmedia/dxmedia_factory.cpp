@@ -3,6 +3,14 @@
 #include "dxmedia_reader.h"
 #include "dxmedia_writer.h"
 
+void __stdcall create_dxmedia_factory(i_dxmedia_factory** pFactory)
+{
+	if (pFactory)
+	{
+		*pFactory = new dxmedia_factory;
+	}
+}
+
 dxmedia_factory::dxmedia_factory()
 {
 	MFStartup(MF_VERSION);

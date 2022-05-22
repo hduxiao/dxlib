@@ -5,9 +5,10 @@ class dxmedia_reader :
 {
 public:
 
-    void open_media(const wchar_t* media, int& stream_num) override;
-    void get_stream(unsigned int stream_index, dxstream& stream_info) override;
-    void get_sample(unsigned int stream_index, long long frame_time, dxframe& frame) override;
+    void open_media(const wchar_t* media, dxmedia& media_info) override;
+    void get_stream(int stream_index, dxstream& stream_info) override;
+    void read_sample(int& stream_index, dxframe& frame) override;
+    void read_sample(const int& stream_index, dxframe& frame) override;
 
 private:
 

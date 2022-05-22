@@ -36,12 +36,12 @@ int main()
 		pFactory->create_dxmedia_object(DXMEDIA_WRITER, &pObject);
 		pWriter = static_cast<i_dxmedia_writer*>(pObject);
 		
-		int stream_num = 0;
-		pReader->open_media(input_media_file, stream_num);
+		dxmedia media;
+		pReader->open_media(input_media_file, media);
 
 		pWriter->create_media(output_media_file);
 
-		for (int i = 0; i < stream_num; i++)
+		for (int i = 0; i < media.stream_num; i++)
 		{
 			dxstream in_stream;
 			pReader->get_stream(i, in_stream);
@@ -52,8 +52,28 @@ int main()
 			out_stream.avg_bitrate = in_stream.avg_bitrate;
 
 			int stream_index = 0;
-			pWriter->set_stream(out_stream, stream_index);
+			pWriter->add_stream(out_stream, stream_index);
+			if (stream_index < 0)
+			{
+				throw;
+			}
 		}
+
+		pWriter->begin_writing();
+		while (true)
+		{
+			dxframe frame;
+			int stream_index = 0;
+			pReader->read_sample(stream_index, frame);
+			if (stream_index < 0)
+				break;
+			std::cout
+				<< "read sample(" << frame.frame_time << ") from stream "
+				<< stream_index
+				<< std::endl;
+			pWriter->write_sample(stream_index, frame);
+		}
+		pWriter->finalize();
 
 		delete pWriter;
 		delete pReader;
@@ -61,15 +81,3 @@ int main()
 	}
 }
 
-//while (true)
-//{
-//	dxframe frame;
-//	unsigned int stream_index = 1;
-//	pReader->get_sample(stream_index, -1, frame);
-//	if (!frame.data_ptr)
-//		break;
-//	std::cout
-//		<< "read sample(" << frame.frame_time << ") from stream "
-//		<< stream_index
-//		<< std::endl;
-//}

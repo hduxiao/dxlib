@@ -30,9 +30,6 @@
     <ClInclude Include="dxmedia_reader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="dxmedia_struct.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="dxmedia_factory.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -69,9 +66,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dxmedia_reader.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="interface.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="dxmedia_factory.cpp">
