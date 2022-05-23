@@ -72,8 +72,8 @@ public:
 	virtual ~i_dxmedia_reader() {}
 	virtual void open_media(const wchar_t* media, dxmedia& media_info) = 0;
 	virtual void get_stream(int stream_index, dxstream& stream_info) = 0;
-	virtual void read_sample(int& stream_index, dxframe& frame) = 0;
-	virtual void read_sample(const int& stream_index, dxframe& frame) = 0;
+	virtual void read_sample(const int stream_index, int& actual_index, dxframe& frame) = 0;
+	virtual void set_position(long long position) = 0;
 };
 
 class i_dxmedia_writer :

@@ -60,138 +60,110 @@ void dxmedia_reader::get_stream(int stream_index, dxstream& stream_info)
 	}
 }
 
-void dxmedia_reader::read_sample(int& stream_index, dxframe& frame)
+void dxmedia_reader::read_sample(const int stream_index, int& actual_index, dxframe& frame)
+{
+	DWORD    dwStreamIndex = 0;
+	DWORD    dwActualStreamIndex = 0;
+	DWORD    dwStreamFlags = 0;
+	LONGLONG llTimestamp = 0;
+	LONGLONG llDuration = 0;
+	CComPtr<IMFSample> pMFSample;
+	CComPtr<IMFMediaBuffer> media_buffer;
+	CComPtr<IMF2DBuffer2> media_buffer2;
+
+	if (m_pReader == nullptr)
+		goto done;
+
+	if (-1 == stream_index)
+	{
+		dwStreamIndex = MF_SOURCE_READER_ANY_STREAM;
+	}
+	else if (-2 == stream_index)
+	{
+		dwStreamIndex = MF_SOURCE_READER_FIRST_VIDEO_STREAM;
+	}
+	else if (-3 == stream_index)
+	{
+		dwStreamIndex = MF_SOURCE_READER_FIRST_AUDIO_STREAM;
+	}
+	else if (stream_index >= 0 && stream_index < m_media.stream_num)
+	{
+		dwStreamIndex = stream_index;
+	}
+	else
+	{
+		goto done;
+	}
+	
+	m_pReader->ReadSample(
+		dwStreamIndex,
+		0,
+		&dwActualStreamIndex,
+		&dwStreamFlags,
+		&llTimestamp,
+		&pMFSample);
+
+	if (dwStreamFlags & MF_SOURCE_READERF_ENDOFSTREAM) {
+		goto done;
+	}
+	
+	actual_index = dwActualStreamIndex;
+
+	pMFSample->GetSampleDuration(&llDuration);
+	frame.frame_time = llTimestamp;
+	frame.duration = llDuration;
+	
+	pMFSample->ConvertToContiguousBuffer(&media_buffer);
+	
+	media_buffer->QueryInterface(IID_PPV_ARGS(&media_buffer2));
+	if (media_buffer2)
+	{
+		DWORD cbBufferLength = 0;
+		BYTE* pbScanline0 = NULL;
+		LONG lPitch = 0;
+		BYTE* pbBufferStart = NULL;
+		media_buffer2->Lock2DSize(MF2DBuffer_LockFlags_Read,
+			&pbScanline0, &lPitch, &pbBufferStart, &cbBufferLength);
+		if (cbBufferLength > 0)
+		{
+			frame.data_ptr = new byte[cbBufferLength]();
+			memcpy(frame.data_ptr, pbBufferStart, cbBufferLength);
+			frame.frame_size = cbBufferLength;
+		}
+		media_buffer2->Unlock2D();
+	}
+	else
+	{
+		DWORD cbBufferLength = 0;
+		media_buffer->GetCurrentLength(&cbBufferLength);
+		frame.data_ptr = new byte[cbBufferLength]();
+
+		BYTE* pData = NULL;
+		media_buffer->Lock(&pData, NULL, NULL);
+		memcpy(frame.data_ptr, pData, cbBufferLength);
+		frame.frame_size = cbBufferLength;
+		media_buffer->Unlock();
+	}
+
+	frame.width = m_stream[actual_index].frame_width;
+	frame.height = m_stream[actual_index].frame_height;
+	frame.stride = frame.width * 3/*RGB24*/;
+	
+	return;
+
+done:
+	actual_index = -1;
+}
+
+void dxmedia_reader::set_position(long long position)
 {
 	if (m_pReader)
 	{
-		DWORD    dwActualStreamIndex = 0;
-		DWORD    dwStreamFlags = 0;
-		LONGLONG llTimestamp = 0;
+		PROPVARIANT varPosition{};
+		varPosition.vt = VT_I8;
+		varPosition.hVal.QuadPart = position;
 
-		CComPtr<IMFSample> pMFSample;
-		m_pReader->ReadSample(
-			MF_SOURCE_READER_ANY_STREAM,
-			0,
-			&dwActualStreamIndex,
-			&dwStreamFlags,
-			&llTimestamp,
-			&pMFSample);
-
-		if (dwStreamFlags & MF_SOURCE_READERF_ENDOFSTREAM) {
-			stream_index = -1;
-			return;
-		}
-
-		stream_index = dwActualStreamIndex;
-
-		LONGLONG llDuration = 0;
-		pMFSample->GetSampleDuration(&llDuration);
-		frame.frame_time = llTimestamp;
-		frame.duration = llDuration;
-
-		CComPtr<IMFMediaBuffer> media_buffer;
-		pMFSample->ConvertToContiguousBuffer(&media_buffer);
-
-		CComPtr<IMF2DBuffer2> media_buffer2;
-		media_buffer->QueryInterface(IID_PPV_ARGS(&media_buffer2));
-		if (media_buffer2)
-		{
-			DWORD cbBufferLength = 0;
-			BYTE* pbScanline0 = NULL;
-			LONG lPitch = 0;
-			BYTE* pbBufferStart = NULL;
-			media_buffer2->Lock2DSize(MF2DBuffer_LockFlags_Read,
-				&pbScanline0, &lPitch, &pbBufferStart, &cbBufferLength);
-			if (cbBufferLength > 0)
-			{
-				frame.data_ptr = new byte[cbBufferLength]();
-				memcpy(frame.data_ptr, pbBufferStart, cbBufferLength);
-				frame.frame_size = cbBufferLength;
-			}
-			media_buffer2->Unlock2D();
-		}
-		else
-		{
-			DWORD cbBufferLength = 0;
-			media_buffer->GetCurrentLength(&cbBufferLength);
-			frame.data_ptr = new byte[cbBufferLength]();
-
-			BYTE* pData = NULL;
-			media_buffer->Lock(&pData, NULL, NULL);
-			memcpy(frame.data_ptr, pData, cbBufferLength);
-			frame.frame_size = cbBufferLength;
-			media_buffer->Unlock();
-		}
-
-		frame.width = m_stream[stream_index].frame_width;
-		frame.height = m_stream[stream_index].frame_height;
-		frame.stride = frame.width * 3/*RGB24*/;
-	}
-}
-
-void dxmedia_reader::read_sample(const int& stream_index, dxframe& frame)
-{
-	if (stream_index < m_stream.size())
-	{
-		DWORD    dwActualStreamIndex = 0;
-		DWORD    dwStreamFlags = 0;
-		LONGLONG llTimestamp = 0;
-
-		CComPtr<IMFSample> pMFSample;
-		m_pReader->ReadSample(
-			stream_index,
-			0,
-			&dwActualStreamIndex,
-			&dwStreamFlags,
-			&llTimestamp,
-			&pMFSample);
-
-		if (dwStreamFlags & MF_SOURCE_READERF_ENDOFSTREAM) {
-			return;
-		}
-
-		LONGLONG llDuration = 0;
-		pMFSample->GetSampleDuration(&llDuration);
-		frame.frame_time = llTimestamp;
-		frame.duration = llDuration;
-
-		CComPtr<IMFMediaBuffer> media_buffer;
-		pMFSample->ConvertToContiguousBuffer(&media_buffer);
-
-		CComPtr<IMF2DBuffer2> media_buffer2;
-		media_buffer->QueryInterface(IID_PPV_ARGS(&media_buffer2));
-		if (media_buffer2)
-		{
-			DWORD cbBufferLength = 0;
-			BYTE* pbScanline0 = NULL;
-			LONG lPitch = 0;
-			BYTE* pbBufferStart = NULL;
-			media_buffer2->Lock2DSize(MF2DBuffer_LockFlags_Read,
-				&pbScanline0, &lPitch, &pbBufferStart, &cbBufferLength);
-			if (cbBufferLength > 0)
-			{
-				frame.data_ptr = new byte[cbBufferLength]();
-				memcpy(frame.data_ptr, pbBufferStart, cbBufferLength);
-				frame.frame_size = cbBufferLength;
-			}
-			media_buffer2->Unlock2D();
-		}
-		else
-		{
-			DWORD cbBufferLength = 0;
-			media_buffer->GetCurrentLength(&cbBufferLength);
-			frame.data_ptr = new byte[cbBufferLength]();
-
-			BYTE* pData = NULL;
-			media_buffer->Lock(&pData, NULL, NULL);
-			memcpy(frame.data_ptr, pData, cbBufferLength);
-			frame.frame_size = cbBufferLength;
-			media_buffer->Unlock();
-		}
-
-		frame.width = m_stream[stream_index].frame_width;
-		frame.height = m_stream[stream_index].frame_height;
-		frame.stride = frame.width * 3/*RGB24*/;
+		m_pReader->SetCurrentPosition(GUID_NULL, varPosition);
 	}
 }
 
