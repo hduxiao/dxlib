@@ -10,9 +10,9 @@ int main()
 {
 	i_dxmedia_factory* pFactory = nullptr;
 	const wchar_t* input_media_file
-		= L"C:\\Users\\hduxi\\Desktop\\Animotica_22_5_19_7_28.mp4";
+		= L"D:\\editing_test\\8K 奥地利风光 Pictures in Motion UHD 8K_24fps.mp4";
 	const wchar_t* output_media_file
-		= L"C:\\Users\\hduxi\\Desktop\\transcode.mp4";
+		= L"D:\\editing_test\\4K 奥地利风光 Pictures in Motion UHD 4K_24fps.mp4";
 
 	auto dxmedia_dll = LoadLibraryW(L"dxmedia");
 	if (dxmedia_dll)
@@ -64,11 +64,11 @@ int main()
 		{
 			dxframe frame;
 			int stream_index = 0;
-			pReader->read_sample(-1, stream_index, frame);
+			pReader->read_sample(stream_index, frame);
 			if (stream_index < 0)
 				break;
 			std::cout
-				<< "read sample(" << frame.timestamp << ") from stream "
+				<< "read sample(" << frame.frame_time << ") from stream "
 				<< stream_index
 				<< std::endl;
 			pWriter->write_sample(stream_index, frame);
@@ -80,3 +80,4 @@ int main()
 		delete pFactory;
 	}
 }
+

@@ -1,11 +1,7 @@
 #pragma once
 
-#include <iostream>
-
 #define DXMEDIA_READER 10000
 #define DXMEDIA_WRITER 10001
-
-using uchar = unsigned char;
 
 struct dxmedia
 {
@@ -42,39 +38,13 @@ struct dxstream
 
 struct dxframe
 {
-	long long    datasize = 0;
-	long long    timestamp = 0;
+	long long    frame_size = 0;
+	long long    frame_time = 0;
 	long long    duration = 0;
 	long long    stride = 0;
 	long long    height = 0;
 	long long    width = 0;
-	uchar* data_ptr = nullptr;
-
-	dxframe& operator=(const dxframe& dxf)
-	{
-		// first release
-		release();
-
-		// then allocate
-		*this = dxf;
-		this->data_ptr = new uchar[dxf.datasize]();
-		memcpy(this->data_ptr, dxf.data_ptr, dxf.datasize);
-	}
-
-	dxframe& operator=(dxframe&& dxf) noexcept
-	{
-		// first release
-		release();
-
-		// then move
-		*this = dxf;
-		dxf.reset();
-	}
-
-	~dxframe()
-	{
-		release();
-	}
+	unsigned char* data_ptr = nullptr;
 
 	void release()
 	{
@@ -83,17 +53,6 @@ struct dxframe
 			delete[] data_ptr;
 			data_ptr = nullptr;
 		}
-	}
-
-	void reset()
-	{
-		datasize = {};
-		timestamp = {};
-		duration = {};
-		stride = {};
-		height = {};
-		width = {};
-		data_ptr = {};
 	}
 };
 

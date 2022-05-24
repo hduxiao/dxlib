@@ -112,7 +112,7 @@ void dxmedia_writer::write_sample(int stream_index, dxframe& frame)
 		IMFSample* pSample = NULL;
 		IMFMediaBuffer* pBuffer = NULL;
 
-		const DWORD cbBuffer = (DWORD)frame.datasize;
+		const DWORD cbBuffer = (DWORD)frame.frame_size;
 
 		BYTE* pData = NULL;
 
@@ -152,7 +152,7 @@ void dxmedia_writer::write_sample(int stream_index, dxframe& frame)
 		// Set the time stamp and the duration.
 		if (SUCCEEDED(hr))
 		{
-			hr = pSample->SetSampleTime(frame.timestamp);
+			hr = pSample->SetSampleTime(frame.frame_time);
 		}
 		if (SUCCEEDED(hr))
 		{

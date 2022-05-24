@@ -110,7 +110,7 @@ void dxmedia_reader::read_sample(const int stream_index, int& actual_index, dxfr
 	actual_index = dwActualStreamIndex;
 
 	pMFSample->GetSampleDuration(&llDuration);
-	frame.timestamp = llTimestamp;
+	frame.frame_time = llTimestamp;
 	frame.duration = llDuration;
 	
 	pMFSample->ConvertToContiguousBuffer(&media_buffer);
@@ -126,9 +126,9 @@ void dxmedia_reader::read_sample(const int stream_index, int& actual_index, dxfr
 			&pbScanline0, &lPitch, &pbBufferStart, &cbBufferLength);
 		if (cbBufferLength > 0)
 		{
-			frame.data_ptr = new uchar[cbBufferLength]();
+			frame.data_ptr = new byte[cbBufferLength]();
 			memcpy(frame.data_ptr, pbBufferStart, cbBufferLength);
-			frame.datasize = cbBufferLength;
+			frame.frame_size = cbBufferLength;
 		}
 		media_buffer2->Unlock2D();
 	}
@@ -136,12 +136,12 @@ void dxmedia_reader::read_sample(const int stream_index, int& actual_index, dxfr
 	{
 		DWORD cbBufferLength = 0;
 		media_buffer->GetCurrentLength(&cbBufferLength);
-		frame.data_ptr = new uchar[cbBufferLength]();
+		frame.data_ptr = new byte[cbBufferLength]();
 
 		BYTE* pData = NULL;
 		media_buffer->Lock(&pData, NULL, NULL);
 		memcpy(frame.data_ptr, pData, cbBufferLength);
-		frame.datasize = cbBufferLength;
+		frame.frame_size = cbBufferLength;
 		media_buffer->Unlock();
 	}
 
