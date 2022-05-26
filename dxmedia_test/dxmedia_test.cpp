@@ -5,14 +5,18 @@
 #include <Windows.h>
 #include <iostream>
 #include <vector>
+#include <chrono>
+
+using scsc = std::chrono::system_clock;
+using scdd = std::chrono::duration<double>;
 
 int main()
 {
 	i_dxmedia_factory* pFactory = nullptr;
 	const wchar_t* input_media_file
-		= L"D:\\editing_test\\8K 奥地利风光 Pictures in Motion UHD 8K_24fps.mp4";
+		= L"D:\\editing_test\\[HEVC - HEAACv2] 60sec.MP4";
 	const wchar_t* output_media_file
-		= L"D:\\editing_test\\4K 奥地利风光 Pictures in Motion UHD 4K_24fps.mp4";
+		= L"D:\\editing_test\\transcode.mp4";
 
 	auto dxmedia_dll = LoadLibraryW(L"dxmedia");
 	if (dxmedia_dll)
@@ -47,12 +51,12 @@ int main()
 			pReader->get_stream(i, in_stream);
 
 			dxstream out_stream = in_stream;
-			out_stream.frame_width = in_stream.frame_width;
-			out_stream.frame_height = in_stream.frame_height;
-			out_stream.avg_bitrate = in_stream.avg_bitrate;
+			out_stream.frame_width = in_stream.frame_width / 2;
+			out_stream.frame_height = in_stream.frame_height / 2;
+			out_stream.avg_bitrate = in_stream.avg_bitrate / 4;
 
 			int stream_index = 0;
-			pWriter->add_stream(out_stream, stream_index);
+			pWriter->add_stream(in_stream, out_stream, stream_index);
 			if (stream_index < 0)
 			{
 				throw;
@@ -64,14 +68,20 @@ int main()
 		{
 			dxframe frame;
 			int stream_index = 0;
-			pReader->read_sample(stream_index, frame);
+			auto start = scsc::now();
+			pReader->read_sample(-1, stream_index, frame);
+			auto end = scsc::now();
+			scdd diff = end - start;
+			int fps = int(1.0f / diff.count());
 			if (stream_index < 0)
 				break;
 			std::cout
 				<< "read sample(" << frame.frame_time << ") from stream "
 				<< stream_index
+				<< " fps: " << fps
 				<< std::endl;
 			pWriter->write_sample(stream_index, frame);
+			frame.release();
 		}
 		pWriter->finalize();
 

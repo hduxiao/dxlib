@@ -3,6 +3,13 @@
 #define DXMEDIA_READER 10000
 #define DXMEDIA_WRITER 10001
 
+using uint = unsigned int;
+using uchar = unsigned char;
+
+static const uint DEFAULT_AUDIO_NUM_CHANNELS = 2;  // Stereo
+static const uint DEFAULT_AUDIO_SAMPLE_RATE = 48000;  // 48000 Hz
+static const uint DEFAULT_BITS_PER_AUDIOSAMPLE = 16;  // 16 bit
+
 struct dxmedia
 {
 	long long stream_num = 0;
@@ -44,7 +51,7 @@ struct dxframe
 	long long    stride = 0;
 	long long    height = 0;
 	long long    width = 0;
-	unsigned char* data_ptr = nullptr;
+	uchar* data_ptr = nullptr;
 
 	void release()
 	{
@@ -70,7 +77,7 @@ class i_dxmedia_reader :
 {
 public:
 	virtual ~i_dxmedia_reader() {}
-	virtual void open_media(const wchar_t* media, dxmedia& media_info) = 0;
+	virtual void open_media(const wchar_t* media, dxmedia& media_info, bool useDXVA = false) = 0;
 	virtual void get_stream(int stream_index, dxstream& stream_info) = 0;
 	virtual void read_sample(const int stream_index, int& actual_index, dxframe& frame) = 0;
 	virtual void set_position(long long position) = 0;
@@ -82,7 +89,7 @@ class i_dxmedia_writer :
 public:
 	virtual ~i_dxmedia_writer() {}
 	virtual void create_media(const wchar_t* media) = 0;
-	virtual void add_stream(const dxstream& out_stream, int& stream_index) = 0;
+	virtual void add_stream(const dxstream& in, const dxstream& out, int& index) = 0;
 	virtual void write_sample(int stream_index, dxframe& frame) = 0;
 	virtual void begin_writing() = 0;
 	virtual void finalize() = 0;

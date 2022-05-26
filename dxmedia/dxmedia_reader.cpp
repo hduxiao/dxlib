@@ -26,7 +26,7 @@ HRESULT EnumerateTypesForStream(IMFSourceReader* pReader, DWORD dwStreamIndex)
 	return hr;
 }
 
-void dxmedia_reader::open_media(const wchar_t* media, dxmedia& media_info)
+void dxmedia_reader::open_media(const wchar_t* media, dxmedia& media_info, bool useDXVA)
 {
 	if (media)
 	{
@@ -256,15 +256,22 @@ void dxmedia_reader::set_mediatype()
 		{
 			CComPtr<IMFMediaType> pNativeType;
 			m_pReader->GetNativeMediaType((DWORD)stream.index, 0, &pNativeType);
-			pNativeType->SetGUID(MF_MT_SUBTYPE, MFVideoFormat_RGB24);
-			m_pReader->SetCurrentMediaType((DWORD)stream.index, 0, pNativeType);
+
+			VideoType out_type(pNativeType);
+			out_type.SetSubType(MFVideoFormat_RGB24);
+			m_pReader->SetCurrentMediaType((DWORD)stream.index, 0, out_type);
 		}
 		else if (dxstream::type::audio == stream.type)
 		{
 			CComPtr<IMFMediaType> pNativeType;
 			m_pReader->GetNativeMediaType((DWORD)stream.index, 0, &pNativeType);
-			pNativeType->SetGUID(MF_MT_SUBTYPE, MFAudioFormat_PCM);
-			m_pReader->SetCurrentMediaType((DWORD)stream.index, 0, pNativeType);
+
+			AudioType out_type(pNativeType);
+			out_type.SetSubType(MFAudioFormat_PCM);
+			out_type.SetSamplesPerSecond(DEFAULT_AUDIO_SAMPLE_RATE);
+			out_type.SetBitsPerSample(DEFAULT_BITS_PER_AUDIOSAMPLE);
+			out_type.SetNumChannels(DEFAULT_AUDIO_NUM_CHANNELS);
+			m_pReader->SetCurrentMediaType((DWORD)stream.index, 0, out_type);
 		}
 	}
 }

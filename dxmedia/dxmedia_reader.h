@@ -5,7 +5,7 @@ class dxmedia_reader :
 {
 public:
 
-	void open_media(const wchar_t* media, dxmedia& media_info) override;
+	void open_media(const wchar_t* media, dxmedia& media_info, bool useDXVA = false) override;
 	void get_stream(int stream_index, dxstream& stream_info) override;
 	void read_sample(const int stream_index, int& actual_index, dxframe& frame) override;
 	void set_position(long long position) override;

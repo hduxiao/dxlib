@@ -19,30 +19,30 @@ void dxmedia_writer::create_media(const wchar_t* media)
 	}
 }
 
-void dxmedia_writer::add_stream(const dxstream& out_stream, int& stream_index)
+void dxmedia_writer::add_stream(const dxstream& in, const dxstream& out, int& index)
 {
 	if (m_pWriter)
 	{
 		HRESULT hr = S_OK;
 		DWORD dwStreamIndex{};
 
-		if (dxstream::type::video == out_stream.type)
+		if (dxstream::type::video == out.type)
 		{
 			VideoType out_stream_type;
 			out_stream_type.CreateEmptyType();
 			out_stream_type.SetSubType(MFVideoFormat_H264);
-			out_stream_type.SetFrameDimensions((UINT32)out_stream.frame_width, (UINT32)out_stream.frame_height);
-			out_stream_type.SetFrameRate((UINT32)out_stream.framerate_nume, (UINT32)out_stream.framerate_deno);
+			out_stream_type.SetFrameDimensions((UINT32)out.frame_width, (UINT32)out.frame_height);
+			out_stream_type.SetFrameRate((UINT32)out.framerate_nume, (UINT32)out.framerate_deno);
 			out_stream_type.SetInterlaceMode(MFVideoInterlace_Progressive);
 
-			if (out_stream.avg_bitrate > 0)
+			if (out.avg_bitrate > 0)
 			{
-				out_stream_type.SetAvgerageBitRate((UINT32)out_stream.avg_bitrate);
+				out_stream_type.SetAvgerageBitRate((UINT32)out.avg_bitrate);
 			}
 			else
 			{
 				UINT32 avg_1080 = 3500'000;
-				FLOAT ratio = FLOAT(out_stream.frame_width * out_stream.frame_height) / (1920 * 1080);
+				FLOAT ratio = FLOAT(out.frame_width * out.frame_height) / (1920 * 1080);
 				UINT32 avg_bitrate = UINT32(avg_1080 * ratio);
 				out_stream_type.SetAvgerageBitRate(avg_bitrate);
 			}
@@ -53,8 +53,8 @@ void dxmedia_writer::add_stream(const dxstream& out_stream, int& stream_index)
 				VideoType in_stream_type;
 				in_stream_type.CreateEmptyType();
 				in_stream_type.SetSubType(MFVideoFormat_RGB24);
-				in_stream_type.SetFrameDimensions((UINT32)out_stream.frame_width, (UINT32)out_stream.frame_height);
-				in_stream_type.SetFrameRate((UINT32)out_stream.framerate_nume, (UINT32)out_stream.framerate_deno);
+				in_stream_type.SetFrameDimensions((UINT32)in.frame_width, (UINT32)in.frame_height);
+				in_stream_type.SetFrameRate((UINT32)in.framerate_nume, (UINT32)in.framerate_deno);
 
 				LONG lStride = 0;
 				in_stream_type.GetDefaultStride(&lStride);
@@ -66,14 +66,14 @@ void dxmedia_writer::add_stream(const dxstream& out_stream, int& stream_index)
 				hr = m_pWriter->SetInputMediaType(dwStreamIndex, in_stream_type, NULL);
 			}
 		}
-		else if (dxstream::type::audio == out_stream.type)
+		else if (dxstream::type::audio == out.type)
 		{
 			AudioType out_stream_type;
 			out_stream_type.CreateEmptyType();
 			out_stream_type.SetSubType(MFAudioFormat_AAC);
-			out_stream_type.SetSamplesPerSecond((UINT32)out_stream.sample_rate);
-			out_stream_type.SetBitsPerSample((UINT32)out_stream.bits_per_sample);
-			out_stream_type.SetNumChannels((UINT32)out_stream.channels);
+			out_stream_type.SetSamplesPerSecond(DEFAULT_AUDIO_SAMPLE_RATE);
+			out_stream_type.SetBitsPerSample(DEFAULT_BITS_PER_AUDIOSAMPLE);
+			out_stream_type.SetNumChannels(DEFAULT_AUDIO_NUM_CHANNELS);
 
 			hr = m_pWriter->AddStream(out_stream_type, &dwStreamIndex);
 			if (SUCCEEDED(hr))
@@ -81,9 +81,9 @@ void dxmedia_writer::add_stream(const dxstream& out_stream, int& stream_index)
 				AudioType in_stream_type;
 				in_stream_type.CreateEmptyType();
 				in_stream_type.SetSubType(MFAudioFormat_PCM);
-				in_stream_type.SetSamplesPerSecond((UINT32)out_stream.sample_rate);
-				in_stream_type.SetBitsPerSample((UINT32)out_stream.bits_per_sample);
-				in_stream_type.SetNumChannels((UINT32)out_stream.channels);
+				in_stream_type.SetSamplesPerSecond(DEFAULT_AUDIO_SAMPLE_RATE);
+				in_stream_type.SetBitsPerSample(DEFAULT_BITS_PER_AUDIOSAMPLE);
+				in_stream_type.SetNumChannels(DEFAULT_AUDIO_NUM_CHANNELS);
 
 				hr = m_pWriter->SetInputMediaType(dwStreamIndex, in_stream_type, NULL);
 			}
@@ -95,12 +95,12 @@ void dxmedia_writer::add_stream(const dxstream& out_stream, int& stream_index)
 
 		if (SUCCEEDED(hr))
 		{
-			stream_index = dwStreamIndex;
-			m_stream.push_back(out_stream);
+			index = dwStreamIndex;
+			m_stream.push_back(out);
 		}
 		else
 		{
-			stream_index = -1;
+			index = -1;
 		}
 	}
 }
