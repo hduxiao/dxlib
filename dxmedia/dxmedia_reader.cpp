@@ -36,6 +36,18 @@ void dxmedia_reader::open_media(const wchar_t* media, dxmedia& media_info, bool 
 
 		MFCreateAttributes(&pReaderAttr, 1);
 		pReaderAttr->SetUINT32(MF_SOURCE_READER_ENABLE_ADVANCED_VIDEO_PROCESSING, TRUE);
+		if (useDXVA)
+		{
+			if (!m_pDXGIManager)
+				CreateDXGIManagerAndDevice();
+
+			CComPtr<IUnknown> unknown;
+			m_pDXGIManager->QueryInterface(IID_PPV_ARGS(&unknown));
+			pReaderAttr->SetUnknown(MF_SOURCE_READER_D3D_MANAGER, unknown);
+
+			pReaderAttr->SetUINT32(MF_READWRITE_ENABLE_HARDWARE_TRANSFORMS, TRUE);
+			pReaderAttr->SetUINT32(MF_SOURCE_READER_DISABLE_DXVA, FALSE);
+		}
 
 		HRESULT hr = MFCreateSourceReaderFromURL(media, pReaderAttr, &m_pReader);
 		if (SUCCEEDED(hr))
@@ -94,7 +106,7 @@ void dxmedia_reader::read_sample(const int stream_index, int& actual_index, dxfr
 	{
 		goto done;
 	}
-	
+
 	m_pReader->ReadSample(
 		dwStreamIndex,
 		0,
@@ -103,18 +115,22 @@ void dxmedia_reader::read_sample(const int stream_index, int& actual_index, dxfr
 		&llTimestamp,
 		&pMFSample);
 
+	if (dwStreamFlags & MF_SOURCE_READERF_ERROR) {
+		throw std::exception();
+	}
+
 	if (dwStreamFlags & MF_SOURCE_READERF_ENDOFSTREAM) {
 		goto done;
 	}
-	
+
 	actual_index = dwActualStreamIndex;
 
 	pMFSample->GetSampleDuration(&llDuration);
 	frame.frame_time = llTimestamp;
 	frame.duration = llDuration;
-	
+
 	pMFSample->ConvertToContiguousBuffer(&media_buffer);
-	
+
 	media_buffer->QueryInterface(IID_PPV_ARGS(&media_buffer2));
 	if (media_buffer2)
 	{
@@ -148,7 +164,7 @@ void dxmedia_reader::read_sample(const int stream_index, int& actual_index, dxfr
 	frame.width = m_stream[actual_index].frame_width;
 	frame.height = m_stream[actual_index].frame_height;
 	frame.stride = frame.width * 3/*RGB24*/;
-	
+
 	return;
 
 done:
@@ -259,6 +275,7 @@ void dxmedia_reader::set_mediatype()
 
 			VideoType out_type(pNativeType);
 			out_type.SetSubType(MFVideoFormat_RGB24);
+			//out_type.SetSubType(MFVideoFormat_RGB32);
 			m_pReader->SetCurrentMediaType((DWORD)stream.index, 0, out_type);
 		}
 		else if (dxstream::type::audio == stream.type)
@@ -274,4 +291,71 @@ void dxmedia_reader::set_mediatype()
 			m_pReader->SetCurrentMediaType((DWORD)stream.index, 0, out_type);
 		}
 	}
+}
+
+HRESULT dxmedia_reader::CreateDXGIManagerAndDevice()
+{
+	HRESULT hr = S_OK;
+
+	CComPtr<IDXGIAdapter> pTempAdapter;
+	CComPtr<ID3D10Multithread> pMultiThread;
+	CComPtr<IDXGIDevice1> pDXGIDev;
+	CComPtr<IDXGIAdapter1> pAdapter;
+	CComPtr<IDXGIOutput> pDXGIOutput;
+
+	D3D_FEATURE_LEVEL featureLevels[] = { D3D_FEATURE_LEVEL_11_1, D3D_FEATURE_LEVEL_11_0 };
+	D3D_FEATURE_LEVEL featureLevel;
+	UINT resetToken;
+
+	do
+	{
+		for (DWORD dwCount = 0; dwCount < ARRAYSIZE(featureLevels); dwCount++)
+		{
+			m_pD3D11Device = NULL;
+			hr = D3D11CreateDevice(NULL, D3D_DRIVER_TYPE_HARDWARE, NULL, D3D11_CREATE_DEVICE_VIDEO_SUPPORT, &featureLevels[dwCount], 1, D3D11_SDK_VERSION, &m_pD3D11Device, &featureLevel, NULL);
+			if (SUCCEEDED(hr))
+			{
+				CComPtr<ID3D11VideoDevice> pDX11VideoDevice = NULL;
+				hr = m_pD3D11Device->QueryInterface(__uuidof(ID3D11VideoDevice), (void**)&pDX11VideoDevice);
+
+				if (SUCCEEDED(hr))
+				{
+					break;
+				}
+			}
+		}
+
+		if (FAILED(hr))
+		{
+			break;
+		}
+
+		if (NULL == m_pDXGIManager)
+		{
+			hr = MFCreateDXGIDeviceManager(&resetToken, &m_pDXGIManager);
+			if (FAILED(hr))
+			{
+				break;
+			}
+			m_DeviceResetToken = resetToken;
+		}
+
+		hr = m_pDXGIManager->ResetDevice(m_pD3D11Device, m_DeviceResetToken);
+		if (FAILED(hr))
+		{
+			break;
+		}
+
+		// Need to explitly set the multithreaded mode for this device
+		hr = m_pD3D11Device->QueryInterface(__uuidof(ID3D10Multithread), (void**)&pMultiThread);
+		if (FAILED(hr))
+		{
+			break;
+		}
+
+		pMultiThread->SetMultithreadProtected(TRUE);
+
+	} while (FALSE);
+
+	return hr;
 }

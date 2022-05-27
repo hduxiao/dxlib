@@ -18,4 +18,9 @@ private:
 	dxmedia m_media;
 	std::vector<dxstream> m_stream;
 	CComPtr<IMFSourceReader> m_pReader;
+
+	HRESULT CreateDXGIManagerAndDevice();
+	CComPtr<ID3D11Device> m_pD3D11Device;
+	CComPtr<IMFDXGIDeviceManager> m_pDXGIManager;
+	UINT m_DeviceResetToken{};
 };
