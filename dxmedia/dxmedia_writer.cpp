@@ -183,5 +183,6 @@ void dxmedia_writer::finalize()
 	if (m_pWriter)
 	{
 		m_pWriter->Finalize();
+		m_pWriter = NULL;
 	}
 }

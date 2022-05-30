@@ -33,8 +33,8 @@ struct dxstream
 	type        type = type::none;
 	long long   avg_bitrate = 0;
 	// video attribute
-	long long   frame_width = 0;
-	long long   frame_height = 0;
+	uint   frame_width = 0;
+	uint   frame_height = 0;
 	long long   framerate_nume = 0;
 	long long   framerate_deno = 0;
 	// audio attribute
@@ -79,6 +79,7 @@ public:
 	virtual ~i_dxmedia_reader() {}
 	virtual void open_media(const wchar_t* media, dxmedia& media_info, bool useDXVA = false) = 0;
 	virtual void get_stream(int stream_index, dxstream& stream_info) = 0;
+	virtual void SetStreamOutput(int stream_index, const dxstream& streamType) = 0;
 	virtual void read_sample(const int stream_index, int& actual_index, dxframe& frame) = 0;
 	virtual void set_position(long long position) = 0;
 };

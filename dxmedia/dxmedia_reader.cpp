@@ -72,6 +72,35 @@ void dxmedia_reader::get_stream(int stream_index, dxstream& stream_info)
 	}
 }
 
+void dxmedia_reader::SetStreamOutput(int stream_index, const dxstream& streamType)
+{
+	if (dxstream::type::video == streamType.type)
+	{
+		CComPtr<IMFMediaType> pNativeType;
+		m_pReader->GetNativeMediaType((DWORD)streamType.index, 0, &pNativeType);
+
+		VideoType out_type(pNativeType);
+		out_type.SetSubType(MFVideoFormat_RGB24);
+		//out_type.SetSubType(MFVideoFormat_RGB32);
+
+		out_type.SetFrameDimensions(streamType.frame_width, streamType.frame_height);
+
+		m_pReader->SetCurrentMediaType((DWORD)streamType.index, 0, out_type);
+	}
+	else if (dxstream::type::audio == streamType.type)
+	{
+		CComPtr<IMFMediaType> pNativeType;
+		m_pReader->GetNativeMediaType((DWORD)streamType.index, 0, &pNativeType);
+
+		AudioType out_type(pNativeType);
+		out_type.SetSubType(MFAudioFormat_PCM);
+		out_type.SetSamplesPerSecond(DEFAULT_AUDIO_SAMPLE_RATE);
+		out_type.SetBitsPerSample(DEFAULT_BITS_PER_AUDIOSAMPLE);
+		out_type.SetNumChannels(DEFAULT_AUDIO_NUM_CHANNELS);
+		m_pReader->SetCurrentMediaType((DWORD)streamType.index, 0, out_type);
+	}
+}
+
 void dxmedia_reader::read_sample(const int stream_index, int& actual_index, dxframe& frame)
 {
 	DWORD    dwStreamIndex = 0;
