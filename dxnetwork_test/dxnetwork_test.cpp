@@ -30,7 +30,7 @@ int main()
 #ifdef _WIN32
             LoadLibraryW(L"dxnetwork");
 #elif __APPLE__
-            dlopen("../../dxnetwork/cmake-build-debug/libdxnetwork.dylib", RTLD_LOCAL|RTLD_LAZY);
+            dlopen("libdxnetwork.dylib", RTLD_LOCAL|RTLD_LAZY);
 #endif
 	if (dxnetwork_dll)
 	{

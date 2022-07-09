@@ -21,8 +21,8 @@ void dxnetwork_transfer::listen(const char* ip, ushort port, int& result)
 			std::cout << "please input the file you want to transfer: " << std::endl;
 
 			std::string filePath;
-			//std::wcin >> filePath;
-			filePath = "/Users/mini/Downloads/iu.mp4";
+			std::cin >> filePath;
+//			filePath = "/Users/mini/Downloads/iu.mp4";
 
 			FILE* fp = fopen(filePath.c_str(), "rb");
 			if (fp == NULL) {
@@ -84,8 +84,8 @@ void dxnetwork_transfer::connect(const char* ip, ushort port, int& result)
 	std::cout << "please input the path of the file you want to save:\n";
 
 	std::string fileSavePath;
-	//std::wcin >> fileSavePath;
-	fileSavePath = "C:\\Users\\hduxi\\Desktop\\syc2.mp4";
+	std::cin >> fileSavePath;
+//	fileSavePath = "C:\\Users\\hduxi\\Desktop\\syc2.mp4";
 
 	FILE* fp = fopen(fileSavePath.c_str(), "wb");
 	if (fp == NULL) {
