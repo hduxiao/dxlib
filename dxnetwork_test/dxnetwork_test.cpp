@@ -1,17 +1,23 @@
-﻿#include <Windows.h>
+﻿#ifdef _WIN32
+#include <Windows.h>
+#elif __APPLE__
+#include <dlfcn.h>
+#define GetProcAddress dlsym
+#define FreeLibrary dlclose
+#endif
 #include <thread>
 #include "../dxnetwork/interface.h"
 
 void test_listen(i_dxnetwork_transfer* pTransfer)
 {
 	int listen_result = 0;
-	pTransfer->listen("127.0.0.1", 5127, listen_result);
+	pTransfer->listen("192.168.0.100", 5127, listen_result);
 }
 
 void test_connect(i_dxnetwork_transfer* pTransfer)
 {
 	int connect_result = 0;
-	pTransfer->connect("127.0.0.1", 5127, connect_result);
+	pTransfer->connect("192.168.0.100", 5127, connect_result);
 }
 
 int main()
@@ -20,7 +26,12 @@ int main()
 	i_dxnetwork_factory* pFactory = nullptr;
 	i_dxnetwork_transfer* pTransfer = nullptr;
 
-	auto dxnetwork_dll = LoadLibraryW(L"dxnetwork");
+	auto dxnetwork_dll =
+#ifdef _WIN32
+            LoadLibraryW(L"dxnetwork");
+#elif __APPLE__
+            dlopen("../../dxnetwork/cmake-build-debug/libdxnetwork.dylib", RTLD_LOCAL|RTLD_LAZY);
+#endif
 	if (dxnetwork_dll)
 	{
 		auto cdf_func_address = GetProcAddress(dxnetwork_dll, "create_dxnetwork_factory");
@@ -41,9 +52,9 @@ int main()
 	if (pTransfer)
 	{
 		std::thread th_listen(test_listen, pTransfer);
-		std::thread th_connect(test_connect, pTransfer);
+//		std::thread th_connect(test_connect, pTransfer);
 
-		th_connect.detach();
+//		th_connect.join();
 		th_listen.join();
 
 		delete pTransfer;

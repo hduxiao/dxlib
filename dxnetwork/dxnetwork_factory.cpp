@@ -2,7 +2,7 @@
 #include "dxnetwork_factory.h"
 #include "dxnetwork_transfer.h"
 
-void __stdcall create_dxnetwork_factory(i_dxnetwork_factory** pFactory)
+void create_dxnetwork_factory(i_dxnetwork_factory** pFactory)
 {
 	if (pFactory)
 	{
@@ -12,6 +12,7 @@ void __stdcall create_dxnetwork_factory(i_dxnetwork_factory** pFactory)
 
 dxnetwork_factory::dxnetwork_factory()
 {
+#ifdef _WIN32
 	WORD wVersionRequested;
 	WSADATA wsaData;
 
@@ -20,11 +21,14 @@ dxnetwork_factory::dxnetwork_factory()
 	if (err != 0) {
 		// WSAStartup failed
 	}
+#endif
 }
 
 dxnetwork_factory::~dxnetwork_factory()
 {
+#ifdef _WIN32
 	WSACleanup();
+#endif
 }
 
 void dxnetwork_factory::create_dxnetwork_object(ushort object, i_dxnetwork_object** ppObject)

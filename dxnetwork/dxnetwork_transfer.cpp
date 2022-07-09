@@ -15,16 +15,16 @@ void dxnetwork_transfer::listen(const char* ip, ushort port, int& result)
 	while (true)
 	{
 		SOCKADDR clntAddr{};
-		int nSize = sizeof(SOCKADDR);
+		socklen_t nSize = sizeof(SOCKADDR);
 		SOCKET clntSock = ::accept(servSock, (SOCKADDR*)&clntAddr, &nSize);
 		if (clntSock != INVALID_SOCKET) {
 			std::cout << "please input the file you want to transfer: " << std::endl;
 
-			std::wstring filePath;
+			std::string filePath;
 			//std::wcin >> filePath;
-			filePath = L"C:\\Users\\hduxi\\Desktop\\syc.mp4";
+			filePath = "/Users/mini/Downloads/iu.mp4";
 
-			FILE* fp = _wfopen(filePath.c_str(), L"rb");
+			FILE* fp = fopen(filePath.c_str(), "rb");
 			if (fp == NULL) {
 				std::cout << "file load failed!" << std::endl;
 				continue;
@@ -54,12 +54,12 @@ void dxnetwork_transfer::listen(const char* ip, ushort port, int& result)
 					<< "MB" << std::endl;
 			}
 
-			//文件读取完毕，断开输出流，向客户端发送FIN包
+			// notify end
 			shutdown(clntSock, SD_SEND);
 
-			//阻塞，等待客户端接收完毕
+			// wait client end
 			recv(clntSock, buffer.get(), bufferSize, 0);
-			closesocket(clntSock);
+			close(clntSock);
 
 			break;
 		}
@@ -78,15 +78,16 @@ void dxnetwork_transfer::connect(const char* ip, ushort port, int& result)
 	auto res = ::connect(sock, (SOCKADDR*)&sockAddr, sizeof(SOCKADDR));
 	if (res != 0) {
 		std::cout << "connect failed!\n";
+        return;
 	}
 
 	std::cout << "please input the path of the file you want to save:\n";
 
-	std::wstring fileSavePath;
+	std::string fileSavePath;
 	//std::wcin >> fileSavePath;
-	fileSavePath = L"C:\\Users\\hduxi\\Desktop\\syc2.mp4";
+	fileSavePath = "C:\\Users\\hduxi\\Desktop\\syc2.mp4";
 
-	FILE* fp = _wfopen(fileSavePath.c_str(), L"wb");
+	FILE* fp = fopen(fileSavePath.c_str(), "wb");
 	if (fp == NULL) {
 		std::cout << "file create failed!" << std::endl;
 		return;

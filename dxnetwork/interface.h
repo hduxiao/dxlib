@@ -25,5 +25,8 @@ public:
 	virtual void connect(const char* ip, ushort port, int& result) = 0;
 };
 
-extern "C"
-void __stdcall create_dxnetwork_factory(i_dxnetwork_factory * *pFactory);
+extern "C" void
+#ifdef _WIN32
+__stdcall
+#endif
+create_dxnetwork_factory(i_dxnetwork_factory * *pFactory);
