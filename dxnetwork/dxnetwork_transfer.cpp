@@ -59,7 +59,7 @@ void dxnetwork_transfer::listen(const char* ip, ushort port, int& result)
 
 			// wait client end
 			recv(clntSock, buffer.get(), bufferSize, 0);
-			close(clntSock);
+			closesocket(clntSock);
 
 			break;
 		}
