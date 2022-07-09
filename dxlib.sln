@@ -10,6 +10,13 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dxmedia_test", "dxmedia_tes
 		{2AC681A8-C482-440C-8E3D-DA902EB5320F} = {2AC681A8-C482-440C-8E3D-DA902EB5320F}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dxnetwork_test", "dxnetwork_test\dxnetwork_test.vcxproj", "{25633A07-F977-410E-9C1D-D08A2FCE17C3}"
+	ProjectSection(ProjectDependencies) = postProject
+		{D5B826FA-5AD2-48CE-809A-9685F80FF9FE} = {D5B826FA-5AD2-48CE-809A-9685F80FF9FE}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "dxnetwork", "dxnetwork\dxnetwork.vcxproj", "{D5B826FA-5AD2-48CE-809A-9685F80FF9FE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -24,6 +31,14 @@ Global
 		{B8528F31-0111-4D0F-AB66-DC0037FCF593}.Debug|x64.Build.0 = Debug|x64
 		{B8528F31-0111-4D0F-AB66-DC0037FCF593}.Release|x64.ActiveCfg = Release|x64
 		{B8528F31-0111-4D0F-AB66-DC0037FCF593}.Release|x64.Build.0 = Release|x64
+		{25633A07-F977-410E-9C1D-D08A2FCE17C3}.Debug|x64.ActiveCfg = Debug|x64
+		{25633A07-F977-410E-9C1D-D08A2FCE17C3}.Debug|x64.Build.0 = Debug|x64
+		{25633A07-F977-410E-9C1D-D08A2FCE17C3}.Release|x64.ActiveCfg = Release|x64
+		{25633A07-F977-410E-9C1D-D08A2FCE17C3}.Release|x64.Build.0 = Release|x64
+		{D5B826FA-5AD2-48CE-809A-9685F80FF9FE}.Debug|x64.ActiveCfg = Debug|x64
+		{D5B826FA-5AD2-48CE-809A-9685F80FF9FE}.Debug|x64.Build.0 = Debug|x64
+		{D5B826FA-5AD2-48CE-809A-9685F80FF9FE}.Release|x64.ActiveCfg = Release|x64
+		{D5B826FA-5AD2-48CE-809A-9685F80FF9FE}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

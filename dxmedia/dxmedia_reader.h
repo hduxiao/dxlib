@@ -9,7 +9,7 @@ public:
 	void get_stream(int stream_index, dxstream& stream_info) override;
 	void SetStreamOutput(int stream_index, const dxstream& streamType) override;
 	void read_sample(const int stream_index, int& actual_index, dxframe& frame) override;
-	void set_position(long long position) override;
+	void set_position(llong position) override;
 
 private:
 

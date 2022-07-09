@@ -5,6 +5,8 @@
 
 using uint = unsigned int;
 using uchar = unsigned char;
+using ushort = unsigned short;
+using llong = long long;
 
 static const uint DEFAULT_AUDIO_NUM_CHANNELS = 2;  // Stereo
 static const uint DEFAULT_AUDIO_SAMPLE_RATE = 48000;  // 48000 Hz
@@ -12,10 +14,10 @@ static const uint DEFAULT_BITS_PER_AUDIOSAMPLE = 16;  // 16 bit
 
 struct dxmedia
 {
-	long long stream_num = 0;
-	long long first_video_stream = 0;
-	long long first_audio_stream = 0;
-	long long duration = 0;
+	llong stream_num = 0;
+	llong first_video_stream = 0;
+	llong first_audio_stream = 0;
+	llong duration = 0;
 	bool have_video_stream = false;
 	bool have_audio_stream = false;
 };
@@ -29,28 +31,28 @@ struct dxstream
 		none
 	};
 
-	long long   index = 0;
+	llong   index = 0;
 	type        type = type::none;
-	long long   avg_bitrate = 0;
+	llong   avg_bitrate = 0;
 	// video attribute
 	uint   frame_width = 0;
 	uint   frame_height = 0;
-	long long   framerate_nume = 0;
-	long long   framerate_deno = 0;
+	llong   framerate_nume = 0;
+	llong   framerate_deno = 0;
 	// audio attribute
-	long long   channels = 0;
-	long long   sample_rate = 0;
-	long long   bits_per_sample = 0;
+	llong   channels = 0;
+	llong   sample_rate = 0;
+	llong   bits_per_sample = 0;
 };
 
 struct dxframe
 {
-	long long    frame_size = 0;
-	long long    frame_time = 0;
-	long long    duration = 0;
-	long long    stride = 0;
-	long long    height = 0;
-	long long    width = 0;
+	llong    frame_size = 0;
+	llong    frame_time = 0;
+	llong    duration = 0;
+	llong    stride = 0;
+	llong    height = 0;
+	llong    width = 0;
 	uchar* data_ptr = nullptr;
 
 	void release()
@@ -69,7 +71,7 @@ class i_dxmedia_factory
 {
 public:
 	virtual ~i_dxmedia_factory() {}
-	virtual void create_dxmedia_object(unsigned short object, i_dxmedia_object** ppObject) = 0;
+	virtual void create_dxmedia_object(ushort object, i_dxmedia_object** ppObject) = 0;
 };
 
 class i_dxmedia_reader :
@@ -81,7 +83,7 @@ public:
 	virtual void get_stream(int stream_index, dxstream& stream_info) = 0;
 	virtual void SetStreamOutput(int stream_index, const dxstream& streamType) = 0;
 	virtual void read_sample(const int stream_index, int& actual_index, dxframe& frame) = 0;
-	virtual void set_position(long long position) = 0;
+	virtual void set_position(llong position) = 0;
 };
 
 class i_dxmedia_writer :

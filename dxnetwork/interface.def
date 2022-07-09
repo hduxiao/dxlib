@@ -1,0 +1,3 @@
+LIBRARY "dxnetwork"
+EXPORTS
+	create_dxnetwork_factory

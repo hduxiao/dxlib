@@ -200,7 +200,7 @@ done:
 	actual_index = -1;
 }
 
-void dxmedia_reader::set_position(long long position)
+void dxmedia_reader::set_position(llong position)
 {
 	if (m_pReader)
 	{

@@ -13,8 +13,8 @@
   <PropertyGroup Label="Globals">
     <VCProjectVersion>16.0</VCProjectVersion>
     <Keyword>Win32Proj</Keyword>
-    <ProjectGuid>{2ac681a8-c482-440c-8e3d-da902eb5320f}</ProjectGuid>
-    <RootNamespace>dxmedia</RootNamespace>
+    <ProjectGuid>{d5b826fa-5ad2-48ce-809a-9685f80ff9fe}</ProjectGuid>
+    <RootNamespace>dxnetwork</RootNamespace>
     <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
@@ -53,7 +53,7 @@
     <ClCompile>
       <WarningLevel>Level3</WarningLevel>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>_DEBUG;DXMEDIA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_DEBUG;DXNETWORK_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -72,7 +72,7 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;DXMEDIA_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;DXNETWORK_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeader>Use</PrecompiledHeader>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
@@ -88,25 +88,16 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="common\BufferLock.h" />
-    <ClInclude Include="common\logging.h" />
-    <ClInclude Include="common\logmediatype.h" />
-    <ClInclude Include="common\mediatype.h" />
-    <ClInclude Include="common\mfhelper.h" />
-    <ClInclude Include="common\mfutils.h" />
-    <ClInclude Include="common\PropVar.h" />
-    <ClInclude Include="dxmedia_factory.h" />
-    <ClInclude Include="dxmedia_reader.h" />
-    <ClInclude Include="dxmedia_writer.h" />
+    <ClInclude Include="dxnetwork_factory.h" />
+    <ClInclude Include="dxnetwork_transfer.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="interface.h" />
     <ClInclude Include="pch.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="dllmain.cpp" />
-    <ClCompile Include="dxmedia_factory.cpp" />
-    <ClCompile Include="dxmedia_reader.cpp" />
-    <ClCompile Include="dxmedia_writer.cpp" />
+    <ClCompile Include="dxnetwork_factory.cpp" />
+    <ClCompile Include="dxnetwork_transfer.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Create</PrecompiledHeader>
